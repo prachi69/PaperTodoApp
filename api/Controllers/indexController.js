@@ -26,25 +26,24 @@ export var addTask = async (req, res, next) => {
 export var showTasks = async (req, res, next) => {
     try{
         var result = await taskSchemaModel.find();
-        
+
         if(result!=0)
         {
             res.status(200).json({msg : "Task Details Successfully Fetched", taskDetails : result});
         }
         else
         {
-            res.status(404).json({msg : "Task Details Not Found", taskDetails : result});
+            res.status(200).json({msg : "Task Details Not Found", taskDetails : result});
         }
     } catch (error) {
         res.status(500).json({msg : "Internal Server Error", taskDetails : error});
     }
-
 }
 
 export var manageStatus = async (req, res, next) => {
     try{
         var conditions = req.params;
-        console.log(conditions); 
+        // console.log(conditions); 
         if (req.params.status === 'pending' )
         {
             var result =  await taskSchemaModel.updateOne({_id : req.params._id}, {$set : {status : 0}});

@@ -1,14 +1,38 @@
 import React, { Component } from 'react';
+import axios from 'axios';
 import './TodoApp.css';
 
 class TodoApp extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      tasks: [],
       newTask: '',
+      taskDetails: [],
       filter: 'all',
+      output: ''
     };
+  }
+
+  usedetails = () => {
+    axios.get("http://localhost:3001/api/showtasks").then((response) => {
+      // console.log(response.data.taskDetails);
+      this.setState({taskDetails : response.data.taskDetails});
+    }).catch((error) => {
+      console.log(error);
+    });
+  }
+  
+  componentDidMount() {
+    this.usedetails();
+    console.log('componentDidMount Invoked');
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.taskDetails !== this.state.taskDetails)
+    {
+      this.usedetails();
+      console.log('componentDidUpdate Invoked');
+    }
   }
 
   handleInputTaskChange = (event) => {
@@ -17,47 +41,32 @@ class TodoApp extends Component {
 
   addTask = (event) => {
     event.preventDefault();
-    // const { newTask } = this.state;
-
     if (this.state.newTask.trim() !== '') {
-      const newId = this.state.tasks.length + 1;
-
-      const newTask = {
-        id: newId,
-        text: this.state.newTask,
-        completed: false,
+      const taskData = {
+        taskTxt: this.state.newTask,
       };
-
-      const tasks = [...this.state.tasks, newTask];
-
-      this.setState({ tasks, newTask: '' });
+      axios.post("http://localhost:3001/api/addtask", taskData).then((response) => {
+        // console.log(response.data.msg);
+        this.setState({output : response.data.msg, newTask : '' });
+        this.usedetails();
+      }).catch((error) => {
+        console.log(error);
+      });
     }
   };
-  toggleTaskStatus = (id) => {
-    const tasks = this.state.tasks.map((todo) => {
-      if (todo.id === id) {
-        return { ...todo, done: !todo.done };
-      }
-      return todo;
+
+  toggleTaskStatus = (_id, status) => {
+    // alert (status+"-------->"+_id);
+    var apiURL = "http://localhost:3001/api/managestatus/"+status+"/"+_id
+    axios.get(apiURL).then((response) => {
+      this.usedetails();
+    }).catch((error) => {
+      console.log(error);
     });
-    this.setState({ tasks });
-  };
-
-  getFilteredtasks = () => {
-    const { tasks, filter } = this.state;
-    switch (filter) {
-      case 'completed':
-        return tasks.filter((todo) => todo.done);
-      case 'active':
-        return tasks.filter((todo) => !todo.done);
-      default:
-        return tasks;
-    }
-  };
+  }
 
   render() {
     const { newTask, filter } = this.state;
-    const filteredtasks = this.getFilteredtasks();
 
     return (
       <div>
@@ -81,18 +90,21 @@ class TodoApp extends Component {
                 </button>
               </form>
 
-              {filteredtasks.map((todo) => (
-                <div
-                  className="AddTask"
-                  key={todo.id}
-                  style={{
-                    textDecoration: todo.done ? 'line-through' : 'none',
-                  }}
-                  onClick={() => this.toggleTaskStatus(todo.id)}
-                >
-                  {todo.text}
-                </div>
-              ))}
+                {
+                  this.state.taskDetails.map((todo) => (
+                  <div
+                    className="AddTask"
+                    key={todo._id}
+                    style={{
+                      textDecoration: todo.status === 1 ? 'line-through' : 'none',
+                    }}
+                    onClick={() => this.toggleTaskStatus(todo._id, todo.status === 0 ? "completed" : "pending")}
+                  >
+                    {todo.taskTxt}
+                  </div>
+                ))
+              }
+
             </div>
           </section>
         </body>
