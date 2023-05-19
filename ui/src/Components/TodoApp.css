@@ -51,7 +51,7 @@ body section {
 }
 
 .inputFeild {
-  border: 5px solid black;
+  border: 3px solid black;
   align-self: left;
   background: transparent;
   padding: 1rem 1rem;
@@ -79,7 +79,20 @@ body section {
   border-radius: 255px 15px 225px 15px/15px 225px 15px 255px;
 }
 .addbtn {
-  border: 5px solid black;
+  border: 3px solid black;
+  align-self: right;
+  padding: 1rem 1rem;
+  transition: all 0.5s ease;
+  margin: 30px;
+  color: #41403e;
+  font-size: 2rem;
+  letter-spacing: 1px;
+  box-shadow: 20px 38px 34px -26px rgba(0, 0, 0, 0.2);
+  border-radius: 255px 15px 225px 15px/15px 225px 15px 255px;
+}
+
+.clrbtn {
+  border: 3px solid black;
   align-self: right;
   padding: 1rem 1rem;
   transition: all 0.5s ease;
@@ -105,7 +118,7 @@ body section {
 }
 
 .AddTask {
-  border: 5px solid black;
+  border: 3px solid black;
   background: transparent;
   padding: 1rem 1rem;
   transition: all 0.5s ease;

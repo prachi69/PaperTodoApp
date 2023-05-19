@@ -73,6 +73,15 @@ class TodoApp extends Component {
       });
   };
 
+  clearTodos = () => {
+    // console.log('clearTodos');
+    axios.delete("http://localhost:3001/api/removetask").then((response) => {
+        console.log(response.data.msg);
+      }).catch((error) => {
+        console.log(error);
+      });
+  };
+
   render() {
     const { newTask, filter } = this.state;
 
@@ -98,7 +107,8 @@ class TodoApp extends Component {
                 </button>
               </form>
 
-              {this.state.taskDetails.map((todo) => (
+              {
+                this.state.taskDetails.map((todo) => (
                 <div
                   className="AddTask"
                   key={todo._id}
@@ -115,7 +125,18 @@ class TodoApp extends Component {
                 >
                   {todo.taskTxt}
                 </div>
-              ))}
+
+                
+              ))
+              }
+
+              <button
+                type="button"
+                className="clrbtn"
+                onClick={this.clearTodos}
+              >
+                Clear
+              </button>
             </div>
           </section>
         </body>

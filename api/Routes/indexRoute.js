@@ -17,4 +17,7 @@ router.get('/managestatus/:status/:_id', indexController.manageStatus );
 
 router.delete('/removetask/:_id', indexController.removeTask );
 
+router.delete('/removetask', indexController.clearTodos );
+
+
 export default router;

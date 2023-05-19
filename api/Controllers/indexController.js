@@ -90,3 +90,29 @@ export var removeTask = async (req, res, next) => {
         res.status(500).json({msg : "Task Status Error", taskDetails : error});
     }
 }
+
+export var clearTodos = async (req, res, next) => {
+    try{
+        var conditions = {};
+        // console.log(conditions);
+        var taskList = await taskSchemaModel.find(conditions);
+        if(taskList.length != 0)
+        {
+            var result = await taskSchemaModel.deleteMany(conditions);
+            if(result)
+            {
+                res.status(200).json({msg : "Task Removed Successfully", taskDetails : result});                
+            }
+            else
+            {
+                res.status(200).json({msg : "Task Removed Failed", taskDetails : result});                
+            }
+        }
+        else
+        {
+            res.status(404).json({msg : "Task Not Found", taskDetails : taskList});
+        }
+    } catch (error) {
+        res.status(500).json({msg : "Task Status Error", taskDetails : error});
+    }
+}
